@@ -1,43 +1,36 @@
 Lab 5 – Motor Parameter Identification
-Overview
+Objective
 
-This lab focuses on identifying the motor parameters 
+The goal of this laboratory work is to identify the motor parameters 
 𝑇
 𝑚
  and 
 𝑘
 𝑒
- for both drive wheels of a TRIK robot. The experiment uses a PWM sweep from −100% to +100% in steps of 5%, with both wheels spinning freely in the air.
+ for both TRIK robot drive wheels using a PWM sweep from −100% to +100% with a step of 5%. The measurements are performed while the wheels are spinning freely in the air.
 
-Project Files
+Experimental Setup
+Robot: TRIK
+Left motor: M3 (encoder E3)
+Right motor: M4 (encoder E4)
+PWM range: −100% to +100%
+PWM step: 5%
+Duration per PWM level: 2 seconds
+
+The robot records the PWM command, elapsed time, encoder readings, and battery voltage for each measurement.
+
+Repository Contents
 File	Description
-motor_identification.qrs	TRIK Studio block program used to collect motor data. For each PWM level, it drives motors M3 and M4 for 2 seconds and records the time and both encoder readings.
-motor_data.txt	Raw experimental data recorded by the robot. Each line contains PWM percentage, time in milliseconds, left encoder angle, right encoder angle, and battery voltage.
-identification.ipynb	Jupyter Notebook used to process the measurements, fit the motor response, identify parameters, and simulate motor behavior using odeint.
-report.md	Experiment description, methodology, results, and discussion.
-report_figs/omega_all_wheels.png	Steady-state angular velocity versus voltage for both wheels, including fitted 
-𝑘
-𝑒
- lines.
-report_figs/step_response.png	Measured and simulated angular position 
-𝜃
-(
-𝑡
-)
- at 100% PWM.
-report_figs/table.md	Table of identified 
-𝑇
-𝑚
- and steady-state angular velocity 
-𝜔
-𝑠
-𝑠
- for each PWM level and wheel.
-Methodology
+motor_identification.qrs	TRIK Studio block program for collecting experimental data
+motor_data.txt	Raw motor measurement data
+identification.ipynb	Data analysis, parameter estimation, and motor simulation
+report.md	Detailed laboratory report
+report_figs/omega_all_wheels.png	Steady-state angular velocity versus voltage for both wheels
+report_figs/step_response.png	Measured and simulated step response at 100% PWM
+report_figs/table.md	Identified time constants and steady-state angular velocities for each PWM level
+Mathematical Model
 
-The motor parameters are identified from the measured encoder positions during the PWM sweep.
-
-The angular position response is modeled as:
+The angular position response of the motor is modeled as
 
 𝜃
 (
@@ -69,35 +62,22 @@ where:
 (
 𝑡
 )
- is the angular position in radians.
+ — angular position (rad)
 𝜔
 𝑠
 𝑠
- is the steady-state angular velocity in rad/s.
+ — steady-state angular velocity (rad/s)
 𝑇
 𝑚
- is the motor time constant in seconds.
+ — motor time constant (s)
 𝑡
- is the elapsed time in seconds.
+ — elapsed time (s)
 
-The identification procedure consists of:
-
-Applying PWM commands from −100% to +100% in 5% increments.
-Recording time, encoder positions, and battery voltage for both motors.
-Fitting the motor response to each measurement run.
-Estimating the time constant 
-𝑇
-𝑚
- and steady-state angular velocity 
-𝜔
-𝑠
-𝑠
-.
-Determining the motor constant 
+The motor parameters are estimated by fitting the model to the measured encoder data. The steady-state angular velocity is then analyzed as a function of motor voltage to identify 
 𝑘
 𝑒
- from the relationship between steady-state angular velocity and motor voltage.
-Simulating the motor response using odeint and comparing it with experimental measurements.
+. The model is also simulated using odeint.
+
 Results
 Wheel	Motor / Encoder	
 𝑘
@@ -108,36 +88,28 @@ Wheel	Motor / Encoder
  (s)	Dead zone
 Left	M3 / E3	0.653	0.149	None at ±5%
 Right	M4 / E4	0.705	0.126	None at ±5%
-Result Summary
-Left wheel (M3/E3): 
-𝑘
-𝑒
-=
-0.653
- V·s/rad and 
-𝑇
-𝑚
-=
-0.149
- s.
-Right wheel (M4/E4): 
-𝑘
-𝑒
-=
-0.705
- V·s/rad and 
-𝑇
-𝑚
-=
-0.126
- s.
-Both wheels respond to commands at ±5% PWM, with no observed dead zone at these tested levels.
-The right wheel has a slightly higher identified motor constant and a shorter time constant than the left wheel.
-Figures
-Steady-State Angular Velocity
 
-!Steady-state angular velocity for both wheels
+The right wheel has a higher identified motor constant and a shorter time constant than the left wheel.
 
-The plot shows the relationship between motor voltage and steady-state angular velocity for both drive wheels, together with the fitted motor constant lines.
+Experimental Results
+Angular Velocity vs. Voltage
 
-Step
+!Angular velocity versus voltage for both wheels
+
+Step Response at 100% PWM
+
+!Measured and simulated step response
+
+How to Run
+Clone or download this repository.
+Install Python 3 and the required libraries: numpy, pandas, scipy, and matplotlib.
+Open identification.ipynb in Jupyter Notebook.
+Run the notebook cells to process the measurements, estimate the motor parameters, and generate the plots.
+
+Make sure the data file and figure paths match the directory structure expected by the notebook.
+
+Conclusion
+
+The motor parameters of both TRIK drive wheels were identified using experimental encoder measurements. The estimated time constants and motor constants can be used to simulate motor dynamics and support the development of robot motion-control algorithms.
+
+The differences between the left and right motor parameters should be considered when implementing precise differential-drive control.
